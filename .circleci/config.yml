@@ -14,7 +14,7 @@ steps-test: &steps-test
         paths:
           - node_modules
         key: v1-dependencies-{{ arch }}-{{ checksum "yarn.lock" }}
-    - run: yarn test
+    # - run: yarn test
     - run: yarn build:docs
 
 version: 2.1
@@ -52,17 +52,12 @@ workflows:
   test_and_release:
     # Run the test jobs first, then the release only when all the test jobs are successful
     jobs:
-      - test-linux-12
       - test-linux-14
-      - test-mac
-      - test-windows
       - release:
           requires:
-            - test-linux-12
             - test-linux-14
-            - test-mac
-            - test-windows
           filters:
             branches:
               only:
                 - main
+          context: cfa-release
